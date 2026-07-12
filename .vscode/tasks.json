@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Foundry: build",
+      "type": "shell",
+      "command": "forge",
+      "args": ["build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Foundry: test",
+      "type": "shell",
+      "command": "forge",
+      "args": ["test", "-vvv"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Foundry: check format",
+      "type": "shell",
+      "command": "forge",
+      "args": ["fmt", "--check"],
+      "problemMatcher": []
+    }
+  ]
+}
+
