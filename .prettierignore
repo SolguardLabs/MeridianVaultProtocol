@@ -1,0 +1,8 @@
+cache/
+out/
+node_modules/
+coverage/
+assets/
+src/**/*.sol
+tests/**/*.sol
+package-lock.json

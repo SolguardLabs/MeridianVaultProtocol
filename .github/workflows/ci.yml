@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+      - production
+      - "release/**"
+    tags:
+      - "v*"
   pull_request:
   workflow_dispatch:
 
@@ -15,27 +19,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  contracts:
-    name: Formato, compilación y pruebas
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+  verify:
+    name: verify-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
     env:
       FOUNDRY_PROFILE: ci
     steps:
-      - name: Descargar repositorio
+      - name: Checkout
         uses: actions/checkout@v7
-        with:
-          submodules: recursive
 
-      - name: Instalar Foundry
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Setup Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: stable
 
-      - name: Mostrar versiones
-        run: |
-          forge --version
-          cast --version
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Ejecutar validación completa
-        run: bash scripts/ci.sh
+      - name: Run production validation
+        run: npm run ci
+
+      - name: Clean build artifacts
+        run: forge clean
